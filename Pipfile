@@ -6,6 +6,10 @@ name = "pypi"
 [packages]
 cookiecutter = "*"
 cookiecutter-data-science = "*"
+pandas = "*"
+numpy = "*"
+scikit-learn = "*"
+sentence-transformers = "*"
 
 [dev-packages]
 
