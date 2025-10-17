@@ -10,6 +10,9 @@ pandas = "*"
 numpy = "*"
 scikit-learn = "*"
 sentence-transformers = "*"
+fastapi = "*"
+uvicorn = {extras = ["standard"], version = "*"}
+pydantic = "*"
 
 [dev-packages]
 
