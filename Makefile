@@ -1,80 +1,29 @@
-#################################################################################
-# GLOBALS                                                                       #
-#################################################################################
+SHELL := /bin/bash
+PIPENV := pipenv run
 
-PROJECT_NAME = iap
-PYTHON_VERSION = 3.10
-PYTHON_INTERPRETER = python
+install:
+	@pipenv install
 
-#################################################################################
-# COMMANDS                                                                      #
-#################################################################################
+train:
+	@$(PIPENV) python run_matcher.py batch
 
+api:
+	@$(PIPENV) python api.py
 
-## Install Python dependencies
-.PHONY: requirements
-requirements:
-	pipenv install
-	
+cli:
+	@$(PIPENV) python run_matcher.py
 
-
-
-## Delete all compiled Python files
-.PHONY: clean
-clean:
-	find . -type f -name "*.py[co]" -delete
-	find . -type d -name "__pycache__" -delete
-
-
-## Lint using ruff (use `make format` to do formatting)
-.PHONY: lint
-lint:
-	ruff format --check
-	ruff check
-
-## Format source code with ruff
-.PHONY: format
-format:
-	ruff check --fix
-	ruff format
-
-
-
-## Run tests
-.PHONY: test
 test:
-	python -m unittest discover -s tests
+	@$(PIPENV) python tests/test_data.py
 
+batch:
+	@$(PIPENV) python run_matcher.py batch
 
-## Set up Python interpreter environment
-.PHONY: create_environment
-create_environment:
-	pipenv --python $(PYTHON_VERSION)
-	@echo ">>> New pipenv created. Activate with:\npipenv shell"
-	
+clean:
+	@rm -rf __pycache__ data/processed/*.csv
 
+lint:
+	@$(PIPENV) flake8 models/ run_matcher.py api.py
 
-
-#################################################################################
-# PROJECT RULES                                                                 #
-#################################################################################
-
-
-
-#################################################################################
-# Self Documenting Commands                                                     #
-#################################################################################
-
-.DEFAULT_GOAL := help
-
-define PRINT_HELP_PYSCRIPT
-import re, sys; \
-lines = '\n'.join([line for line in sys.stdin]); \
-matches = re.findall(r'\n## (.*)\n[\s\S]+?\n([a-zA-Z_-]+):', lines); \
-print('Available rules:\n'); \
-print('\n'.join(['{:25}{}'.format(*reversed(match)) for match in matches]))
-endef
-export PRINT_HELP_PYSCRIPT
-
-help:
-	@$(PYTHON_INTERPRETER) -c "${PRINT_HELP_PYSCRIPT}" < $(MAKEFILE_LIST)
+notebook:
+	@$(PIPENV) jupyter notebook
